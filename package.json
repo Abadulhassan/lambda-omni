@@ -1,0 +1,12 @@
+{
+  "name": "lambda-omni",
+  "version": "1.0.0",
+  "description": "Create user Lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}
