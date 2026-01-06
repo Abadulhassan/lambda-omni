@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION   = "us-west-2"
+        AWS_REGION    = "us-west-2"
         FUNCTION_NAME = "createUser"
     }
 
@@ -15,18 +15,11 @@ pipeline {
             }
         }
 
-        stage('Install Node Dependencies') {
-            steps {
-                sh 'npm ci'
-            }
-        }
-
-        stage('Package Lambda') {
+        stage('Package Lambda (No npm)') {
             steps {
                 sh '''
-                zip -r lambda.zip . \
+                zip -r lambda.zip index.js \
                   -x ".git/*" \
-                  -x "node_modules/aws-sdk/*" \
                   -x "Jenkinsfile"
                 '''
             }
@@ -37,8 +30,8 @@ pipeline {
                 sh '''
                 aws lambda update-function-code \
                   --function-name $FUNCTION_NAME \
-                  --zip-file fileb://lambda.zip \
-                  --region $AWS_REGION
+                  --region $AWS_REGION \
+                  --zip-file fileb://lambda.zip
                 '''
             }
         }
