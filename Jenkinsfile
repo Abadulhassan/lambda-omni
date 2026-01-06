@@ -15,17 +15,7 @@ pipeline {
             }
         }
 
-        stage('Package Lambda (No npm)') {
-            steps {
-                sh '''
-                zip -r lambda.zip index.js \
-                  -x ".git/*" \
-                  -x "Jenkinsfile"
-                '''
-            }
-        }
-
-        stage('Deploy to AWS Lambda') {
+        stage('Deploy Lambda (NO ZIP STEP)') {
             steps {
                 sh '''
                 aws lambda update-function-code \
