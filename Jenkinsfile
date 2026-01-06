@@ -1,36 +1,27 @@
 pipeline {
     agent any
 
-    environment {
-        AWS_REGION    = "us-west-2"
-        FUNCTION_NAME = "createUser"
-        REPO_URL      = "https://github.com/Abadulhassan/lambda-omni.git"
-    }
-
     stages {
-
-        stage('Checkout Repository') {
+        stage('Clone Repository') {
             steps {
-                checkout([
-                  $class: 'GitSCM',
-                  branches: [[name: '*/main']],
-                  userRemoteConfigs: [[url: REPO_URL]]
-                ])
+                git url: 'https://github.com/Abadulhassan/lambda-omni.git', branch: 'main'
             }
         }
 
-        stage('Deploy Lambda') {
+        stage('Build') {
             steps {
-                sh '''
-                docker run --rm \
-                  -v "$PWD:/work" \
-                  -w /work \
-                  amazon/aws-cli:2.15.0 \
-                  lambda update-function-code \
-                  --function-name ${FUNCTION_NAME} \
-                  --region ${AWS_REGION} \
-                  --zip-file fileb://lambda.zip
-                '''
+                echo "🛠️ Run your build steps here"
+                // Example for Node.js:
+                // sh 'npm install'
+                // sh 'npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "🚀 Add your deployment steps here"
+                // Example for SSH deploy to EC2:
+                // sh 'scp -i your-key.pem ./build.zip ec2-user@your-ec2-ip:/path/to/deploy/'
             }
         }
     }
