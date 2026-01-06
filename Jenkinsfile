@@ -4,18 +4,22 @@ pipeline {
     environment {
         AWS_REGION    = "us-west-2"
         FUNCTION_NAME = "createUser"
+        REPO_URL      = "https://github.com/Abadulhassan/lambda-omni.git"
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout Repository') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Abadulhassan/lambda-omni.git'
+                checkout([
+                  $class: 'GitSCM',
+                  branches: [[name: '*/main']],
+                  userRemoteConfigs: [[url: REPO_URL]]
+                ])
             }
         }
 
-        stage('Deploy Lambda (DOCKER CLI MAGIC)') {
+        stage('Deploy Lambda') {
             steps {
                 sh '''
                 docker run --rm \
@@ -31,3 +35,4 @@ pipeline {
         }
     }
 }
+
