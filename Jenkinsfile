@@ -15,18 +15,18 @@ pipeline {
             }
         }
 
-        stage('Deploy Lambda (MAGIC AWS DOCKER)') {
+        stage('Deploy Lambda (DOCKER CLI MAGIC)') {
             steps {
-                script {
-                    docker.image('amazon/aws-cli:2.15.0').inside {
-                        sh '''
-                        aws lambda update-function-code \
-                          --function-name $FUNCTION_NAME \
-                          --region $AWS_REGION \
-                          --zip-file fileb://lambda.zip
-                        '''
-                    }
-                }
+                sh '''
+                docker run --rm \
+                  -v "$PWD:/work" \
+                  -w /work \
+                  amazon/aws-cli:2.15.0 \
+                  lambda update-function-code \
+                  --function-name ${FUNCTION_NAME} \
+                  --region ${AWS_REGION} \
+                  --zip-file fileb://lambda.zip
+                '''
             }
         }
     }
