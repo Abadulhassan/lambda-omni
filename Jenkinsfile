@@ -15,14 +15,18 @@ pipeline {
             }
         }
 
-        stage('Deploy Lambda (NO ZIP STEP)') {
+        stage('Deploy Lambda (MAGIC AWS DOCKER)') {
             steps {
-                sh '''
-                aws lambda update-function-code \
-                  --function-name $FUNCTION_NAME \
-                  --region $AWS_REGION \
-                  --zip-file fileb://lambda.zip
-                '''
+                script {
+                    docker.image('amazon/aws-cli:2.15.0').inside {
+                        sh '''
+                        aws lambda update-function-code \
+                          --function-name $FUNCTION_NAME \
+                          --region $AWS_REGION \
+                          --zip-file fileb://lambda.zip
+                        '''
+                    }
+                }
             }
         }
     }
