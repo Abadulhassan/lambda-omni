@@ -4,7 +4,7 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: "User created successfully",
+      message: "User created successfully it is deployed by Muhammad Abad",
       input: event
     })
   };
